@@ -2,4 +2,7 @@ baseurl: http://astampoulis.github.io/
 languageCode: en-us
 title: Antonis Stampoulis
 theme: nofancy
+author:
+  name: Antonis Stampoulis
+  email: antonis DOT stampoulis AT gmail DOT com
 ...
