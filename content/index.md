@@ -11,15 +11,15 @@ type: home
 I am a software engineer and programming languages researcher living in New York City.  I work at
 [Originate NYC](http://www.originate.com/), and was previously at [MIT](http://plv.csail.mit.edu/)
 and at [Yale](http://cpsc.yale.edu/). You can find some of the things that I've worked on below, or
-read new posts to this site as [a blog](/blog). Feel free to [drop me a line](mailto:antonis DOT
+read new posts to this site as [a blog](/blog). Feel free to [drop me a line](mailto:antonis DOT 
 stampoulis AT gmail DOT com)!
 
 <div style="clear: both;"></div>
 
 ## Research
 
-* [The Makam metalanguage](/makam), meant for prototyping and experimenting with new programming language ideas,
-and as an educational tool for teaching different aspects of programming languages (type systems, compilation, etc.).
+* [Makam](/makam), a meta-language meant for prototyping and experimenting with new programming language ideas,
+and as an educational tool for teaching programming language concepts like type systems, compilation, etc.
 I started building Makam during my post-doc at MIT and I continue to work on it during my
 [20% time at Originate](http://www.originate.com/stories/20-percent-time-done-right).
 
