@@ -1,5 +1,5 @@
 ---
-title: The Makam Metalanguage
+title: Makam
 ---
 
 Makam is a metalanguage: a language for implementing languages. It supports

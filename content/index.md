@@ -14,8 +14,6 @@ and at [Yale](http://cpsc.yale.edu/). You can find some of the things that I've 
 read new posts to this site as [a blog](/blog). Feel free to [drop me a line](mailto:antonis DOT 
 stampoulis AT gmail DOT com)!
 
-<div style="clear: both;"></div>
-
 ## Research
 
 * [Makam](/makam), a meta-language meant for prototyping and experimenting with new programming language ideas,
