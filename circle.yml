@@ -1,0 +1,35 @@
+machine:
+  post:
+    - if [[ ! -e ~/.cache/website ]]; then git clone https://$GITHUB_PAGES_TOKEN@github.com:astampoulis/astampoulis.github.io.git ~/.cache/website; fi
+    - cd ~/.cache/website && git fetch --all && git reset --hard origin/master
+
+dependencies:
+  pre:
+    - go get -v github.com/spf13/hugo
+
+  post:
+    - hugo
+
+  cache_directories:
+    - "~/.cache"
+    - "~/.go_workspace"
+
+test:
+  override:
+    - echo "No tests."
+
+deployment:
+  master:
+    branch: master
+    commands:
+      - cp -R public/* ~/.cache/website
+      - >
+        bash -c 'export COMMIT_NAME=$(git log -1 --pretty=%an);
+                 export COMMIT_EMAIL=$(git log -1 --pretty=%ae);
+                 export COMMIT_MSG=$(git log -1 --pretty=%B);
+                 cd ~/.cache/website;
+                 git add .;
+                 git config user.name "$COMMIT_NAME";
+                 git config user.email "$COMMIT_EMAIL";
+                 git commit -m "$COMMIT_MSG";
+                 git status'
