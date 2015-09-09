@@ -1,6 +1,6 @@
 machine:
   post:
-    - if [[ ! -e ~/.cache/website ]]; then git clone https://$GITHUB_PAGES_TOKEN@github.com:astampoulis/astampoulis.github.io.git ~/.cache/website; fi
+    - if [[ ! -e ~/.cache/website ]]; then git clone https://$GITHUB_PAGES_TOKEN@github.com/astampoulis/astampoulis.github.io.git ~/.cache/website; fi
     - cd ~/.cache/website && git fetch --all && git reset --hard origin/master
 
 dependencies:
@@ -12,7 +12,6 @@ dependencies:
 
   cache_directories:
     - "~/.cache"
-    - "~/.go_workspace"
 
 test:
   override:
