@@ -28,6 +28,7 @@ deployment:
                  export COMMIT_MSG=$(git log -1 --pretty=%B);
                  cd ~/.cache/website;
                  git add .;
+                 git status;
                  git config user.name "$COMMIT_NAME";
                  git config user.email "$COMMIT_EMAIL";
                  git commit -m "$COMMIT_MSG";
