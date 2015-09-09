@@ -32,5 +32,5 @@ deployment:
                  git config user.name "$COMMIT_NAME";
                  git config user.email "$COMMIT_EMAIL";
                  git commit -m "$COMMIT_MSG";
-                 git push'
+                 git push origin master'
 
