@@ -30,14 +30,17 @@
 		</li>
 
                 <div class="post-content">
+                  <div class="post">
                   {{ with $page }}
                     {{ .Summary }}
                     {{ if .Truncated }}<a href="{{ .Permalink }}">Read on →</a>{{ end }}
                   {{ end }}
+                  </div>
                 </div>
 
 		{{ end }}
 	  </ul>
 	</div>
     <div class="pure-u-1-24 pure-u-md-1-6"></div>
+
 </div>
