@@ -1,0 +1,26 @@
+.hljs-typeexpr {
+  color: #022f4a;
+}
+.hljs-typekeywords, .hljs-typesymbols {
+  font-weight: bold;
+}
+.hljs-typevar {
+}
+.hljs-typesymbols {
+}
+
+.hljs-symbol, .hljs-keyword { 
+  font-weight : bold;
+}
+.hljs-metavar {
+  color: #922300;
+}
+.hljs-definition {
+  color: #008843;
+}
+.hljs-command {
+  color: #741c00;
+}
+.hljs-number, .hljs-string {
+  color: #c26b00 !important;
+}
