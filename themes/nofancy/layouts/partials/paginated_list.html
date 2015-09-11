@@ -3,7 +3,8 @@
 	<div class="pure-u-11-12 pure-u-md-5-8">
 	  <ul class="posts">
 		{{ $baseurl := .Site.BaseURL }}
-                {{ range $name, $page := (where .Site.Pages "Type" "post") }}
+                {{ $paginator := .Paginate (where .Site.Pages "Type" "post") }}
+		{{ range $name, $page := $paginator.Pages }}
 		<li>
 		  <h2><a href="{{ .Permalink }}">{{ $page.Title }}</a></h2>
 
@@ -37,6 +38,18 @@
                 </div>
 
 		{{ end }}
+
+                <div class="post-content">
+	          {{ if $paginator.HasPrev }}
+	              <a href="{{ $paginator.Prev.URL }}" class="prev">← Newer posts</a>
+	          {{ end }}
+                  {{ if and $paginator.HasPrev $paginator.HasNext }}
+                  |
+                  {{ end }}
+	          {{ if $paginator.HasNext }}
+	              <a href="{{ $paginator.Next.URL  }}" class="next">Older posts →</a>
+	          {{ end }}
+                </div>
 	  </ul>
 	</div>
     <div class="pure-u-1-24 pure-u-md-1-6"></div>
