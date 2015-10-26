@@ -1,6 +1,6 @@
 ---
 date: 2015-09-11T15:59:38-04:00
-title: "Building a small functional language in one hour through Makam"
+title: "Implementing a simple functional language in Makam"
 type: post
 draft: true
 ---
@@ -23,20 +23,38 @@ You're now ready to install Makam itself:
 opam pin add makam https://github.com/astampoulis/makam.git
 ```
 
-## Testing stuff
+## Running code
 
 You can download this blog post as a Makam source file [from here](simple-functional-language.makam).
 Then you can call Makam with:
 
     makam simple-functional-language.makam -
 
-The extra dash option will give you a REPL like this:
+This will load the file and then give you a REPL that looks like this:
 
 	Makam, version 0.5
 
     #
 
 ## Alright, let's do this.
+
+We define a type for the terms of our language:
+
+```makam
+term : type.
+```
+
+Let's add string and integer constants. We'll create constructors that lift meta-terms of the
+`string` and `int` types into object-level terms.
+
+```makam
+intconst : int -> term.
+stringconst : string -> term.
+```
+
+
+
+## Code for testing highlighting:
 
 ```makam
 (* kinds *)
