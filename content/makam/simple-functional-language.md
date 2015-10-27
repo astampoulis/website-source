@@ -5,6 +5,21 @@ type: post
 draft: true
 ---
 
+## Introduction to Makam
+
+New ideas in programming languages come in various forms: from something as simple as a cleaner
+syntax for an existing language (e.g. [CoffeeScript](http://coffeescript.org/)), to new type system
+features -- for example, the ownership tracking for safe low-level code in
+[Rust](http://rust-lang.org/). Research in programming languages explores new ideas in type
+systems and compilation techniques.
+
+To implement a new syntax, one can write a grammar, and get a parser out of it using a parser generator
+tool like ANTLR. Modifications to the grammar are easy, and the grammar itself serves as a good
+reference for developers -- at least compared to a hand-rolled parser.
+
+Makam is an attempt to have a similar tool for prototyping the rest of a programming language
+implementation.
+
 ## Installing Makam
 
 First, make sure you got `opam` installed -- the OCaml package manager.
@@ -44,15 +59,13 @@ We define a type for the terms of our language:
 term : type.
 ```
 
-Let's add string and integer constants. We'll create constructors that lift meta-terms of the
-`string` and `int` types into object-level terms.
+Let's add boolean and integer constants. We'll create constructors that lift meta-terms of the
+`bool` and `int` types into object-level terms.
 
 ```makam
 intconst : int -> term.
-stringconst : string -> term.
+boolconst : bool -> term.
 ```
-
-
 
 ## Code for testing highlighting:
 

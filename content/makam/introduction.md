@@ -6,7 +6,7 @@ draft: true
 ---
 
 People set out to design new programming languages for all sorts of different reasons: someone might
-be stuck with a language runtime and hate the syntax for it (e.g. CoffeeScript); want to incorporate
+be stuck with a language but hate the syntax for it (e.g. CoffeeScript); want to incorporate
 new type system features (e.g. safe manual memory management through ownership tracking in Rust); adding
 runtime features, such as primitives for concurrent code (e.g. agents in Erlang); or want to combine
 existing ideas in a single language (e.g. combining a functional language with the Java OO system in
@@ -19,7 +19,8 @@ actually parses text using this syntax. Hand-rolling a parser is doable, but usi
 generator significantly cuts down on the initial implementation time and on the time it takes
 to incorporate changes. The focus is on the *what* the syntax is vs. to *how* parsing the syntax is
 implemented. As a result, a grammar is a reliable way of communicating whereas a hand-rolled parser
-is not.
+is not. Typically the parser translates the *concrete syntax* of the language, the string-based
+representation of a program, into the *abstract syntax tree*.
 
 While doing research on [VeriML](/veriml), I found that when working on language features like a
 complicated type system of a language, it is very important to be able to test it out in practice,
