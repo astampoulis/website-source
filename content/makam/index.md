@@ -10,7 +10,7 @@ programming and is a refinement of the λProlog language. Makam is implemented f
 The name comes from the makam/maqam of traditional Turkish and Arabic music: a set of
 techniques of improvisation, defining the pitches, patterns and development of a piece of music.
 
-I started working on the design and implementation of Makam started in 2012 at MIT, under the
+I started working on the design and implementation of Makam in 2012 at MIT, under the
 supervision of [Prof. Adam Chlipala](http://adam.chlipala.net/), and continue to work on it as a
 personal project at [Originate NYC](http://www.originate.com/).
 
