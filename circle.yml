@@ -17,6 +17,10 @@ test:
   override:
     - echo "No tests."
 
+general:
+  artifacts:
+    - "public"
+
 deployment:
   master:
     branch: master
