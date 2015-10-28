@@ -5,20 +5,28 @@ type: post
 draft: true
 ---
 
-## Introduction to Makam
+Ideas for new features in programming languages come in various forms: from something as simple as
+having a cleaner syntax for an existing language (e.g. [CoffeeScript](http://coffeescript.org/)), to
+adding new type system features -- for example, the borrow checker that enables safe manual memory
+management in [Rust](http://rust-lang.org/).
 
-New ideas in programming languages come in various forms: from something as simple as a cleaner
-syntax for an existing language (e.g. [CoffeeScript](http://coffeescript.org/)), to new type system
-features -- for example, the ownership tracking for safe low-level code in
-[Rust](http://rust-lang.org/). Research in programming languages explores new ideas in type
-systems and compilation techniques.
+Implementing a new syntax is comparatively easy: all one needs to do is write a grammar for it, and
+use a parser generator like Yacc and ANTLR to get an efficient parser. Grammars describe *what* to
+parse, instead of *how* to parse it; as a result they are much more readable than a parser itself,
+more amenable to change, and can serve as the canonical reference of the new syntax.
 
-To implement a new syntax, one can write a grammar, and get a parser out of it using a parser generator
-tool like ANTLR. Modifications to the grammar are easy, and the grammar itself serves as a good
-reference for developers -- at least compared to a hand-rolled parser.
+Other parts of a programming language are typically much harder to implement, yet
+Wouldn't it be great if there was a way to write readable descriptions of what they're supposed to
+do, and test 
 
-Makam is an attempt to have a similar tool for prototyping the rest of a programming language
-implementation.
+Makam is an attempt at such a tool. 
+For example, given a description of the type system of a language, it 
+Given a description of 
+
+I've been working on for implementing a prototype of the rest of a
+programming language. The initial motivation was for experimenting 
+
+
 
 ## Installing Makam
 
