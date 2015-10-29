@@ -15,17 +15,14 @@ use a parser generator like Yacc and ANTLR to get an efficient parser. Grammars 
 parse, instead of *how* to parse it; as a result they are much more readable than a parser itself,
 more amenable to change, and can serve as the canonical reference of the new syntax.
 
-Other parts of a programming language are typically much harder to implement, yet
-Wouldn't it be great if there was a way to write readable descriptions of what they're supposed to
-do, and test 
+Wouldn't it be great if there existed a similar way to describe other parts of a programming language
+implementation? In fact, there are a few tools that try to do exactly that (The K Framework, PLT Redex, etc.)
 
-Makam is an attempt at such a tool. 
-For example, given a description of the type system of a language, it 
-Given a description of 
-
-I've been working on for implementing a prototype of the rest of a
-programming language. The initial motivation was for experimenting 
-
+- in terms of type systems?
+- higher-order logic programming -- lambda Prolog (core formalism that handles many challenges)
+- Makam is an implementation and an exploration of that as a language prototyping tool
+- in this post we'll see how to get started with Makam, and implement an interpreter and type checker
+  for a small functional language
 
 
 ## Installing Makam
