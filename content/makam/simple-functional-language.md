@@ -13,10 +13,15 @@ management in [Rust](http://rust-lang.org/).
 Implementing a new syntax is comparatively easy: all one needs to do is write a grammar for it, and
 use a parser generator like Yacc and ANTLR to get an efficient parser. Grammars describe *what* to
 parse, instead of *how* to parse it; as a result they are much more readable than a parser itself,
-more amenable to change, and can serve as the canonical reference of the new syntax.
+more amenable to change, and can serve as the canonical reference of the new syntax. Still, efficient
+executable code can be generated based on that description.
 
-Wouldn't it be great if there existed a similar way to describe other parts of a programming language
-implementation? In fact, there are a few tools that try to do exactly that (The K Framework, PLT Redex, etc.)
+Wouldn't it be great if there existed a similar formalism to describe all the parts of a programming
+language implementation, instead of just the parser?
+
+One candidate for such a formalism is [*higher-order logic programming*](http://www.lix.polytechnique.fr/~dale/lProlog/).
+
+In fact, there are a few tools that try to do exactly that (The K Framework, PLT Redex, etc.)
 
 - in terms of type systems?
 - higher-order logic programming -- lambda Prolog (core formalism that handles many challenges)
