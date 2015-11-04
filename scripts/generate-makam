@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+echo 'Generating makam files from posts.'
+find -name \*.md -exec grep -l "^\`\`\`makam" {} \; | xargs awk -f scripts/generate-makam.awk
+
