@@ -1,6 +1,6 @@
 ---
-date: 2015-09-11T15:59:38-04:00
-title: "Implementing a simple functional language in Makam"
+date: 2015-11-01T15:59:38-04:00
+title: "Implementing a simple functional language using Makam"
 type: post
 draft: true
 ---
@@ -19,29 +19,35 @@ executable code can be generated based on that description.
 Wouldn't it be great if there existed a similar formalism to describe all the parts of a programming
 language implementation, instead of just the parser?
 
-One candidate for such a formalism is [*higher-order logic programming*](http://www.lix.polytechnique.fr/~dale/lProlog/).
+<!--more-->
 
-In fact, there are a few tools that try to do exactly that (The K Framework, PLT Redex, etc.)
+While this is very much still an open research direction, one candidate for such a formalism is
+*higher-order logic programming* and the [λProlog](http://www.lix.polytechnique.fr/~dale/lProlog/) language.
+This is a formalism that solves some ubiquitous challenges in language implementation and enables
+concise and readable descriptions of advanced type systems, compilation phases, etc. These descriptions
+are executable, so they can be used directly as a prototype implementation.
 
-- in terms of type systems?
-- higher-order logic programming -- lambda Prolog (core formalism that handles many challenges)
-- Makam is an implementation and an exploration of that as a language prototyping tool
-- in this post we'll see how to get started with Makam, and implement an interpreter and type checker
-  for a small functional language
-
+**Makam** is a new implementation of λProlog that I've been working on for a while, and is meant to be
+used as a language prototyping tool. In this post I'll show how to get started with Makam and how to
+implement an interpreter and type checker for a small functional language using it.
 
 ## Installing Makam
 
-First, make sure you got `opam` installed -- the OCaml package manager.
-You could follow the [instructions on the OPAM website](http://opam.ocaml.org/doc/Quick_Install.html),
-or try one of these:
+Makam is written in [OCaml](http://ocaml.org), so you first need to install `opam` -- the OCaml package manager.
+You could follow the [instructions on the OPAM website](http://opam.ocaml.org/doc/Quick_Install.html), or try one of
+these:
 
-    # on Ubuntu:
-    sudo add-apt-repository ppa:avsm/ppa
-    sudo apt-get update
-    sudo apt-get install opam
-    # on MacOS X with HomeBrew
-    brew install opam 
+```bash
+# on Ubuntu:
+sudo apt-get install software-properties-common
+sudo add-apt-repository ppa:avsm/ppa
+sudo apt-get update
+sudo apt-get install opam
+# on MacOS X with HomeBrew
+brew install opam
+# on both, after installation:
+opam init
+```
 
 You're now ready to install Makam itself:
 ```bash
@@ -50,7 +56,7 @@ opam pin add makam https://github.com/astampoulis/makam.git
 
 ## Running code
 
-You can download this blog post as a Makam source file [from here](simple-functional-language.makam).
+You can download this blog post as a Makam source file [from here](../simple-functional-language.makam).
 Then you can call Makam with:
 
     makam simple-functional-language.makam -
