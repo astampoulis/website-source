@@ -82,7 +82,7 @@ natural numbers and recursion to make it easier to write interesting functions. 
 
 - $- \pi -$
 
-- $- e{}e' -$
+- $- e \; e' -$
 
 In cases like these where we are dealing with two languages at the same time and things can easily
 get confusing, it is important to have a clear distinction between them. We call the language that
