@@ -92,3 +92,6 @@ and Makam is the meta-language.
 
 ## Starting off: defining the abstract syntax
 
+```makam
+test : type.
+```
