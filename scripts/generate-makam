@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
 echo 'Generating makam files from posts.'
-find -name \*.md -exec grep -l "^\`\`\`makam" {} \; | xargs -r awk -f scripts/generate-makam.awk
+find -name \*.md -exec grep -l "^\`\`\`makam" {} \; | xargs -n 1 -r awk -f scripts/generate-makam.awk
 

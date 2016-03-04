@@ -31,8 +31,9 @@ are executable, so they can be used directly as a prototype implementation.
 be used as a language prototyping tool. In this post I'll show how to get started with Makam and how
 to implement an interpreter and type checker for a small functional language using it. In later
 posts in this series we'll explore how to implement further language constructs like algebraic
-data-types, exceptions, etc., additions to the type system and compilation phases; and I'll go into
-more details about the fundamentals of Makam itself.
+data-types, exceptions, etc. We will also explore different type system features, as well as what
+the different compilation phases for this language would be; and I'll go into more details about the
+fundamentals of Makam itself.
 
 ## Installing Makam
 
@@ -77,12 +78,13 @@ Let's talk a bit more about the language that we'll model in Makam. We'll be doi
 natural numbers and recursion to make it easier to write interesting functions. The *terms* or
 *expressions* of the language are:
 
-- $- \lambda x:\tau.e -$ -- lambda function: an anonymous function taking one argument and returning an expression
-  that might make use of that argument
+- $- \lambda x:\tau.e -$ -- /lambda function/: a literal for an anonymous function
 
-- $- \pi -$
+- $- e \; e' -$ -- /application/ of a function to an argument
 
-- $- e \; e' -$
+- $- x -$ -- /variable/ 
+
+- $- let x = e in e' -$ -- 
 
 In cases like these where we are dealing with two languages at the same time and things can easily
 get confusing, it is important to have a clear distinction between them. We call the language that
@@ -95,3 +97,5 @@ and Makam is the meta-language.
 ```makam
 test : type.
 ```
+
+## Differences between Makam and functional languages
