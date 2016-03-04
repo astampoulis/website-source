@@ -23,11 +23,11 @@ personal project at [Originate NYC](http://www.originate.com/).
     main technical features of Makam, which is the closest thing that
     we have right now to a language tutorial (expect a proper tutorial
     soon though!)
-- [Slides for the CRSX User Meeting](makam/slides-crsx.pdf). These are
+- [Slides for the CRSX User Meeting](slides-crsx.pdf). These are
     the slides for a talk I gave in the 2nd CRSX User Meeting, in Two
     Sigma NYC. They describe the main features of Makam and are a good
     reference point if you need a quick overview of the language.
-- [Slides for the MIT PL/SE Offsite](makam/slides-lightning.pdf). This
+- [Slides for the MIT PL/SE Offsite](slides-lightning.pdf). This
     is a lightning 3-minute talk (with my notes) for the MIT
     Programming Languages/Software Engineering Offsite event. This is
     the talk that I have most enjoyed giving, and might be
