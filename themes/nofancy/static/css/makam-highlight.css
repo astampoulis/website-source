@@ -2,7 +2,7 @@
   color: #022f4a;
 }
 .hljs-typekeywords, .hljs-typesymbols {
-  font-weight: bold;
+  font-weight: bold !important;
 }
 .hljs-typevar {
 }
@@ -10,7 +10,7 @@
 }
 
 .hljs-symbol, .hljs-keyword { 
-  font-weight : bold;
+  font-weight: bold !important;
 }
 .hljs-metavar {
   color: #922300;

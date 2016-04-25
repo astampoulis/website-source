@@ -71,20 +71,130 @@ This will load the definitions we'll see below and give you a REPL that looks li
 
     #
 
-## The object language
+## Starting off: a simple expression language
 
-Let's talk a bit more about the language that we'll model in Makam. We'll be doing a version of the
-[simply typed lambda calculus](https://en.wikipedia.org/wiki/Simply_typed_lambda_calculus), adding
-natural numbers and recursion to make it easier to write interesting functions. The *terms* or
-*expressions* of the language are:
+```makam
+expr : type.
+```
 
-- $- \lambda x:\tau.e -$ -- /lambda function/: a literal for an anonymous function
+```makam
+intconst : int -> expr.
+add : expr -> expr -> expr.
+minus : expr -> expr -> expr.
+mult : expr -> expr -> expr.
+```
 
-- $- e \; e' -$ -- /application/ of a function to an argument
+```makam
+eval : expr -> expr -> prop.
+```
 
-- $- x -$ -- /variable/ 
+```makam
+eval (intconst N) (intconst N).
+```
 
-- $- let x = e in e' -$ -- 
+```makam
+eval (add E1 E2) (intconst N') <-
+  eval E1 (intconst N1),
+  eval E2 (intconst N2),
+  plus N1 N2 N'.
+```
+
+```makam
+eval (minus E1 E2) (intconst N') <-
+  eval E1 (intconst N1),
+  eval E2 (intconst N2),
+  plus N2 N' N1.
+```
+
+```makam
+eval (add (intconst 1) (intconst 2)) X ?
+>> Yes:
+>> X := intconst 3
+```
+
+```makam
+eval (mult E1 E2) (intconst N') <-
+  eval E1 (intconst N1),
+  eval E2 (intconst N2),
+  mult N1 N2 N'.
+```
+
+```makam
+boolconst : bool -> expr.
+lt : expr -> expr -> expr.
+ifthenelse : expr -> expr -> expr -> expr.
+```
+
+```makam
+eval (boolconst B) (boolconst B).
+
+eval (lt E1 E2) (boolconst B) <-
+  eval E1 (intconst N1),
+  eval E2 (intconst N2),
+  lessthan N1 N2 B.
+```
+
+```makam
+eval (ifthenelse E1 E2 E3) V2 <-
+  eval E1 (boolconst true),
+  eval E2 V2.
+
+eval (ifthenelse E1 E2 E3) V3 <-
+  eval E1 (boolconst false),
+  eval E3 V3.
+```
+
+```makam
+eval (add (intconst 1) (ifthenelse (lt (intconst 1) (intconst 2)) (intconst 2) (intconst 3))) X ?
+>> Yes:
+>> X := intconst 3
+```
+
+```makam
+eval (ifthenelse (intconst 0) (intconst 1) (intconst 2)) X ?
+>> Impossible.
+```
+
+## Adding a type system
+
+```makam
+typ : type.
+
+tint : typ.
+tbool : typ.
+
+typeof : expr -> typ -> prop.
+```
+
+```makam
+typeof (intconst _) tint.
+```
+
+```makam
+typeof (add E1 E2) tint <-
+  typeof E1 tint, typeof E2 tint.
+```
+
+$$\frac{\vdash \texttt{E1} : \textsf{int} \hspace{3em} \vdash \texttt{E2} : \textsf{int}}
+       {\vdash \texttt{E1 + E2} : \textsf{int}}
+$$
+
+```makam
+typeof (minus E1 E2) tint <- typeof E1 tint, typeof E2 tint.
+typeof (mult E1 E2) tint <- typeof E1 tint, typeof E2 tint.
+
+typeof (boolconst B) tbool.
+
+typeof (lt E1 E2) tbool <-
+  typeof E1 tint, typeof E2 tint.
+
+typeof (ifthenelse E1 E2 E3) T <-
+  typeof E1 tbool, typeof E2 T, typeof E3 T.
+```
+
+$$\frac{\vdash \texttt{E1} : \textsf{bool} \hspace{3em} \vdash \texttt{E2} : \tau \hspace{3em} \vdash \texttt{E3} : \tau}
+       {\vdash \texttt{if E1 then E2 else E3} : \tau}
+$$
 
 In cases like these where we are dealing with two languages at the same time and things can easily
 get confusing, it is important to have a clear distinction between them. We call the language that
@@ -92,10 +202,87 @@ we are implementing the *object* language, and the language that we are using to
 language (or *host* language). In our case, the simply-typed lambda calculus is the object language,
 and Makam is the meta-language.
 
-## Starting off: defining the abstract syntax
+## Adding the lambda calculus
 
 ```makam
-test : type.
+app : expr -> expr -> expr.
+var : string -> expr.
+lam : string -> expr -> expr.
 ```
 
-## Differences between Makam and functional languages
+```makam
+eval (lam S E) (lam S E).
+
+eval (var X) (var X).
+
+>> eval (app E1 E2) V <-
+>>  eval E1 (lam S E),
+>>  eval E2 V2,
+>>  subst E S V2 E',
+>>  eval E' V.
+```
+
+```makam
+lam : (expr -> expr) -> expr.
+
+eval (lam E) (lam E).
+```
+
+```makam
+eval (app E1 E2) V <-
+  eval E1 (lam E),
+  eval E2 V2,
+  eval (E V2) V.
+```
+
+```makam
+tarrow : typ -> typ -> typ.
+```
+
+```makam
+typeof (app E1 E2) T' <-
+  typeof E1 (tarrow T T'), typeof E2 T.
+```
+
+```makam
+typeof (lam E) (tarrow T T') <-
+  (x:expr -> typeof x T -> typeof (E x) T').
+```
+
+$$
+\Gamma \; ::= \; \overrightarrow{x : \tau}
+$$
+
+$$
+\frac{\Gamma, x : \tau \vdash \texttt{E} : \tau'}
+     {\Gamma \vdash \texttt{lam(x.E)} : \tau \to \tau'}
+$$
+
+## Adding recursion
+
+```makam
+letrec : (expr -> expr) -> (expr -> expr) -> expr.
+```
+
+```makam
+typeof (letrec Def Body) T' <-
+  (x:expr -> typeof x T -> typeof (Def x) T),
+  (x:expr -> typeof x T -> typeof (Body x) T').
+```
+
+```makam
+eval (letrec Def Body) V <-
+  eval (Body (Def (letrec Def (fun x => x)))) V.
+```
+
+```makam
+(eq _Fact
+  (letrec (fun fact => lam (fun n => ifthenelse (lt n (intconst 2)) (intconst 1) (mult n (app fact (minus n (intconst 1))))))
+          (fun fact => fact)),
+ typeof _Fact T,
+ eval (app _Fact (intconst 5)) X) ?
+>> Yes:
+>> T := tarrow tint tint,
+>> X := intconst 120
+```
+
