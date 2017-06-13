@@ -46,11 +46,11 @@ Antonis Stampoulis and Zhong Shao, _ICFP 2010, September 27-29, 2010, Baltimore,
 
 ## Implementation
 
--   [VeriML version 0.5](popl2012/veriml-0.5.tar.gz). A lot of big and
+-   [VeriML version 0.5](veriml-0.5.tar.gz). A lot of big and
     small improvements and changes; the most major ones being that
     VeriML is now compiled through translation to ML (instead of
     interpreted) and that there is some inductive definition support.
--   [VeriML version 0.3](popl2012/veriml-0.3.tar.gz). This reflects
+-   [VeriML version 0.3](veriml-0.3.tar.gz). This reflects
     VeriML as described in our POPL 2012 paper.
--   [VeriML version 0.1](icfp2010/veriml-0.1.tar.gz). An older version
+-   [VeriML version 0.1](veriml-0.1.tar.gz). An older version
     corresponding to our ICFP 2010 paper.
