@@ -5,7 +5,7 @@ machine:
 
 dependencies:
   pre:
-    - go get -v github.com/gohugoio/hugo
+    - (cd ~/tmp; wget --output-document=/dev/stdout https://github.com/gohugoio/hugo/releases/download/v0.24/hugo_0.24_Linux-64bit.tar.gz | tar xvzf -) && mv ~/tmp/hugo ~/bin/
 
   post:
     - hugo
