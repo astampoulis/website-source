@@ -10,8 +10,8 @@ type: home
 
 I am a software engineer and programming languages researcher living in New York City.  I work at
 [Originate NYC](http://www.originate.com/), and was previously at [MIT](http://plv.csail.mit.edu/)
-and at [Yale](http://cpsc.yale.edu/). You can find some of the things that I've worked on below, or
-read new posts to this site as [a blog](/blog). Feel free to [drop me a line](mailto:antonis DOT 
+and at [Yale](http://cpsc.yale.edu/). You can find some of the things that I've worked on below<!-- , or -->
+<!-- read new posts to this site as [a blog](/blog) -->. Feel free to [drop me a line](mailto:antonis DOT 
 stampoulis AT gmail DOT com)!
 
 ## Research

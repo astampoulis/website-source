@@ -34,12 +34,12 @@ Makam.
 
 # Draft papers and talks
 
-- [Technical Overview](techoverview.pdf). A paper describing the main technical features of Makam
+- [Technical Overview](../techoverview.pdf). A paper describing the main technical features of Makam
     (slightly dated).
-- [Slides for the CRSX User Meeting](slides-crsx.pdf). These are the slides for a talk I gave in the
+- [Slides for the CRSX User Meeting](../slides-crsx.pdf). These are the slides for a talk I gave in the
     2nd CRSX User Meeting, in Two Sigma NYC. They describe the main features of Makam and are a good
     reference point if you need a quick overview of the language.
-- [Slides for the MIT PL/SE Offsite](slides-lightning.pdf). This is a lightning 3-minute talk (with
+- [Slides for the MIT PL/SE Offsite](../slides-lightning.pdf). This is a lightning 3-minute talk (with
     my notes) for the MIT Programming Languages/Software Engineering Offsite event. Not a lot
     of info on Makam, but quite a fun talk to give :-)
 
