@@ -4,7 +4,7 @@ type: main
 ---
 
 Makam is a metalanguage: a language for implementing languages. It supports
-consise declarative definitions, aimed at allowing rapid prototyping and experimentation
+concise declarative definitions, aimed at allowing rapid prototyping and experimentation
 with new programming language research ideas. The design of Makam is based on higher-order logic
 programming and is a refinement of the λProlog language. Makam is implemented from scratch in OCaml.
 
