@@ -9,4 +9,7 @@ copy-makam-posts:
 build: copy-makam-posts
 	hugo
 
+test:
+	./scripts/test
+
 .PHONY: watch build copy-makam-posts

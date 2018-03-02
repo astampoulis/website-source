@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+set -e
+
+if [[ ${1:-x} == "x" ]]; then
+  echo "Usage: $0 <cloned-github-pages-repo>"
+  exit 1
+fi
+            
+export COMMIT_NAME=$(git log -1 --pretty=%an)
+export COMMIT_EMAIL=$(git log -1 --pretty=%ae)
+export COMMIT_MSG=$(git log -1 --pretty=%B)
+
+cp -R public/* $1
+(cd $1;
+ git add .;
+ git --no-pager diff;
+ git config user.name "$COMMIT_NAME";
+ git config user.email "$COMMIT_EMAIL";
+ git commit -m "$COMMIT_MSG")

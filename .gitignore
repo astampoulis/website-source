@@ -1,3 +1,4 @@
-public/
-content/**/*.makam
-static/blog/**/*.md
+/public/
+/content/**/*.makam
+/static/blog/*.md
+/static/blog/**/*.md

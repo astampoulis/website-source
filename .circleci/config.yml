@@ -1,0 +1,62 @@
+defaults: &defaults
+  working_directory: /code
+  docker:
+    - image: ubuntu:xenial
+
+version: 2
+jobs:
+  test:
+    docker:
+      - image: node:9.4.0
+    steps:
+      - checkout
+      - run: npm install -g makam
+      - run: make test
+  build:
+    <<: *defaults
+    steps:
+      - checkout
+      - run: apt-get update && apt-get install -y wget git make
+      - run: &install-hugo
+          name: Install Hugo
+          command: |
+            (mkdir -p /tmp/hugo; cd /tmp/hugo; wget --output-document=/dev/stdout https://github.com/gohugoio/hugo/releases/download/v0.24/hugo_0.24_Linux-64bit.tar.gz | tar xvzf -) && mv /tmp/hugo/hugo /usr/local/bin/
+      - run: &build-site
+          name: Build site
+          command: make build
+      - run: &clone-upstream-site
+          name: Clone Github pages repository
+          command: |
+            git clone https://$GITHUB_PAGES_TOKEN@github.com/astampoulis/astampoulis.github.io.git /code/website/full
+      - run: &update-upstream-site
+          name: Update Github pages
+          command: |
+            ./scripts/update-website /code/website/full
+      - persist_to_workspace:
+          root: /code/website
+          paths: full
+  deploy:
+    <<: *defaults
+    steps:
+      - run: apt-get update && apt-get install -y git
+      - attach_workspace:
+          at: /code/website
+      - run:
+          name: Push changes upstream
+          command: |
+            cd /code/website/full; git push
+
+workflows:
+  version: 2
+  test-build-deploy:
+    jobs:
+      - test
+      - build
+      - deploy:
+          filters:
+            branches:
+              only:
+                - master
+          requires:
+            - test
+            - build

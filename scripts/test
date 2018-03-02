@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+set -e
+
+for file in $(grep -l '```makam' $(git ls-tree -r --name-only HEAD | grep "\.md$")); do
+  echo "Running tests for $file..."
+  makam --run-tests $file
+done
