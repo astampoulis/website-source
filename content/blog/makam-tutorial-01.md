@@ -225,8 +225,8 @@ field : syntax field.
   / record      { "{" <list_sep (token ",") field> "}" }
 
   field ->
-    mkfield  { <makam.string_literal> ":" <expr> }
-  / mkfield  { <makam.ident> ":" <expr> }
+    mkfield  { <makam.ident> ":" <expr> }
+  / mkfield  { <makam.string_literal> ":" <expr> }
 
   expr ->
     add      { <baseexpr> "+" <expr> }
@@ -243,8 +243,7 @@ field : syntax field.
 eval : string -> string -> prop.
 eval Input Output :-
   syntax.parse_opt expr Input E,
-  print E,
-  debug(eval E V),
+  eval E V,
   syntax.pretty expr V Output.
 ```
 
@@ -253,4 +252,17 @@ eval Input Output :-
 syntax.parse_opt expr << { "foo": [ "bar", 42 ] } >> X ?
 
 eval << { "foo": "a", "foo": [ "bar", 40 + 2 ] } >> Y ?
+```
+
+```makam-hidden
+tests : testsuite. %testsuite tests.
+
+>> syntax.parse_opt expr << { "foo": [ "bar", 42 ] } >> X ?
+>> Yes:
+>> X := record [mkfield "foo" (array [stringconst "bar", intconst 42])].
+
+
+>> eval << { "foo": "a", "foo": [ "bar", 40 + 2 ] } >> Y ?
+>> Yes:
+>> Y := "{ foo : [ \"bar\" , 42 ] } ".
 ```
