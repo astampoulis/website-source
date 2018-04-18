@@ -65,7 +65,8 @@ our base constructs are. To keep things simple let's start with this:
 Here is a more formal way where you might see this kind of definition of language constructs on paper:
 
 `$$\begin{array}{llll}
-e & \text{(expressions)} & ::= & s \; | \; n \; | \; b \; | \; e_1 + e_2 \; | \; [ e_1, \cdots, e_n ] \; | \; \{ s_1: e_1, \cdots, s_n: e_n \} \\
+e & \text{(expressions)} & ::= & s \; | \; n \; | \; b \; | \; e_1 + e_2 \; | \; [ e_1, \cdots, e_n ] \; | \; \\
+                         & & &   \{ s_1: e_1, \cdots, s_n: e_n \} \\
 s & \text{(string constants)} & ::= & \cdots \\
 n & \text{(integer constants)} & ::= & \cdots \\
 b & \text{(boolean constants)} & ::= & \text{true} \; | \; \text{false}
@@ -136,7 +137,8 @@ documentation. This helps sometimes to disambiguate between what each different 
 example, we could define the `if`-`then`-`else` statement as:
 
 ```makam-noeval
-ifthenelse : (Condition: expr) (Then: block) (Else: block) -> statement
+ifthenelse :
+  (Condition: expr) (Then: block) (Else: block) -> statement
 ```
 
 Going back to booleans and lists, they are defined as follows:
@@ -189,13 +191,21 @@ eval (array ES) (array VS) :-
 
 ```makam
 update_or_add :
-  (In: list field) (Key: string) (Value: expr) (Out: list field) -> prop.
-update_or_add [] Key Value [mkfield Key Value].
-update_or_add (mkfield Key Value1 :: Rest) Key Value2 (mkfield Key Value2 :: Rest).
-update_or_add (mkfield Key1 Value1 :: Rest) Key2 Value2 (mkfield Key1 Value1 :: Rest') :-
-  not(eq Key1 Key2), update_or_add Rest Key2 Value2 Rest'.
+  (In: list field) (Key: string) (Value: expr)
+  (Out: list field) -> prop.
+update_or_add []
+  Key Value [mkfield Key Value].
+update_or_add (mkfield Key Value1 :: Rest)
+  Key Value2
+  (mkfield Key Value2 :: Rest).
+update_or_add (mkfield Key1 Value1 :: Rest)
+  Key2 Value2
+  (mkfield Key1 Value1 :: Rest') :-
+    not(eq Key1 Key2), update_or_add Rest Key2 Value2 Rest'.
 
-eval_fields : (Evaled: list field) (Unevaled: list field) (Result: list field) -> prop.
+eval_fields :
+  (Evaled: list field) (Unevaled: list field)
+  (Result: list field) -> prop.
 eval_fields Evaled [] Evaled.
 eval_fields Evaled (mkfield Key Expr :: Rest) Result :-
   eval Expr Value,
