@@ -167,6 +167,7 @@ body {
 }
 
 .post h1 {
+        padding-top: 28px;
 	font-size:28px;
 }
 
@@ -235,8 +236,4 @@ body {
 	.desktop {
 		display: block;
 	}
-        .container {
-                max-width: 2000px;
-                margin: 0 auto;
-        }
 }

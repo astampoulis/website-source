@@ -32,6 +32,10 @@ jobs:
           name: Update Github pages
           command: |
             ./scripts/update-website /code/website/full
+      - run: &deploy
+          name: Conditional force deploy
+          command: |
+            if [[ $(git log --format=oneline -n 1 $CIRCLE_SHA1) == *"[ci-force-deploy]"* ]]; then cd /code/website/full; git push; fi
       - persist_to_workspace:
           root: /code/website
           paths: full
