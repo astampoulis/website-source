@@ -15,6 +15,10 @@ them?
 
 <!-- more -->
 
+```makam-hidden
+tests : testsuite. %testsuite tests.
+```
+
 What does it mean to use the language? How do you write programs in it -- what's the syntax like,
 what information can one get about their programs (and how much of it can be inferred)?  What do the
 constructs of the language mean -- how do you compute with them, how do they relate to the
@@ -72,6 +76,7 @@ n & \text{(integer constants)} & ::= & \cdots \\
 b & \text{(boolean constants)} & ::= & \text{true} \; | \; \text{false}
 \end{array}$$`
 
+
 In this notation, *expressions*, *string constants*, *integer constants* etc. are different **sorts** --
 the different "kinds of things" that might be involved in the terms of our language.  For example,
 if we were encoding an imperative language that included statements and statement blocks, we would
@@ -102,7 +107,7 @@ in a way that is human-readable, but we could have different syntaxes for the sa
 
 Instead, we can separate those two concerns into two parts: one where we just give an explicit name
 to each constructor and describe what its constituents are (how many are there and of what sorts) --
-on paper, we could denote that with something like "$\text{add}(e_1, e_2)$"; and one where we
+on paper, we could denote that with something like "$\text{add}(e_1, e_2)$''; and one where we
 describe what the real syntactic form for the constructor is when we write out a program in the
 language. When we talk about **abstract syntax**, we refer to the first part; and **concrete
 syntax** is the latter one.
@@ -116,9 +121,10 @@ For our simple language, we just need expressions:
 expr : type.
 ```
 
-There are built-in sorts for strings and integers in Makam, and booleans and lists are already
-defined in its standard library. Like in most functional languages, all elements of a list are
-of the same type, so lists of expressions are a different type than, say, lists of strings.
+There are built-in sorts for strings and integers in Makam; booleans
+and lists are already defined in its standard library. Like in most
+functional languages, all elements of a list are of the same type, so
+lists of expressions are a different type than, say, lists of strings.
 
 We can now define the constructors for expressions as follows:
 
@@ -138,7 +144,7 @@ example, we could define the `if`-`then`-`else` statement as:
 
 ```makam-noeval
 ifthenelse :
-  (Condition: expr) (Then: block) (Else: block) -> statement
+  (Condition: expr) (Then: block) (Else: block) -> statement.
 ```
 
 Going back to booleans and lists, they are defined as follows:
@@ -147,6 +153,8 @@ Going back to booleans and lists, they are defined as follows:
 bool : type.
 true : bool.
 false : bool.
+
+tuple : (X1: T1) (X2: T2) -> T1 * T2.
 
 list : (A: type) -> type.
 nil : list A.
@@ -165,11 +173,97 @@ record : (Fields: list field) -> expr.
 mkfield : (Key: string) (Val: expr) -> field.
 ```
 
-And that's all the constructors there are for the time being. Let's now define operations on them.
+And that covers all the constructors we'll define for the time being. Now let's see how to actually
+define *computations* over these terms. Our example will be an interpreter for our language,
+that computes the value that an expression evaluates to.
 
-##### WIP from here on
+# Computation in logic programming
 
-# Interpretation
+One of the main operations in a functional language is pattern-matching: that is, we try to match a
+value against a pattern; if the match is successful, we proceed to take the corresponding branch.
+Patterns are kind of like "templates" for values: some parts are explicitly specified, while others
+are allowed to be arbitrary. Pattern matching checks whether a value matches that template and what
+the instantiation for the unknown parts (the *pattern variables*) needs to be.
+
+Here's an example of a Makam query that does pattern matching. We will talk about queries later on,
+but if you run this post right now using the Run button on the bottom-right corner, you will see
+that an instantiation for the `N1`, `X2` pattern variables is found:
+
+```makam
+pattern_match (add (intconst N1) X2) (add (intconst 5) (intconst 10)) ?
+```
+
+Logic programming instead treats *unification* as one of the key operations. This is the symmetric,
+more general, version of pattern matching: instead of having a "pattern" with potentially unknown parts,
+and a "value" that is fully known, we have two patterns that might both have unknown parts in them.
+Matching them against each other might force instantiations on either one of them, or even for different
+parts of both:
+
+```makam-hidden
+unify : A -> A -> prop.
+unify X X.
+```
+
+```makam
+unify (add (intconst N1) X2) (add X1 (intconst N2)) ?
+```
+
+```makam-hidden
+>> Yes:
+>> X1 := intconst N1,
+>> X2 := intconst N2,
+>> N1 := N1,
+>> N2 := N2.
+```
+
+(Note the color-coding on the side of codeblocks of this post: blue blocks are things that will be sent
+to Makam, which become green after a successful run, and grey ones are skipped).
+
+This choice has a wide-ranging implication on how computation in logic programming actually looks
+like.  In a functional language, at the point where a function is applied, its inputs are fully
+known (or at least fully knowable, in a call-by-need language), whereas outputs are fully unknown,
+to be determined through evaluation of the function. In a logic programming language, there is no
+need to explicitly separate inputs from outputs: both of them could only be partially known at the
+point where a "function" is applied, and unification will reconcile the known and unknown parts.  So
+instead of functions we talk about *predicates*: these describe relations between terms, without
+explicitly designating some of them as inputs and some as outputs. What is an input and what is an
+output depends on the arguments that the predicates are called with. Here is an example of the
+`plus` predicate, which is the moral equivalent of the `a + b` operation on integers:
+
+```makam
+plus 1 2 X ?
+plus X 2 3 ?
+plus 1 X 3 ?
+```
+
+So the `plus A B C` predicate takes three arguments; the first two, `A`, `B`, are the operands, and `C`, the last one, is the
+result of the addition. However, the predicate can be used not only to find the result of `A + B`, but also to discover the
+value of `A` or `B` given the other operand and the result.
+
+The type of the `plus` predicate is:
+
+```makam-noeval
+plus : (Op1: int) (Op2: int) (Result: int) -> prop.
+```
+
+The name of the type `prop` comes from *proposition*: these are the statements that we can query
+upon, and might be viewed as the logic programming equivalent of the *expressions* of a functional
+programming language. So a fully applied predicate like `plus` is a proposition, and by querying
+about it as we did above, we are asking the Makam interpreter to find an instantiation for the
+unknown *unification variables* that makes the proposition hold.
+
+One might ask -- why is this generalization to relations instead of functions useful? One example
+where we can make good use of this in Makam is when implementing a type checking procedure for a
+language, where blurring the line between inputs and outputs allows us to get a type inferencing
+procedure essentially for free. But that is getting too much ahead of ourselves; we will see more
+on later posts.
+
+With this out of the way, it is time to try our hand at writing our first predicate over the
+expressions we defined.
+
+# Writing an interpreter for our language
+
+**WIP from here on.**
 
 ```makam
 eval : (E: expr) (V: expr) -> prop.
@@ -265,8 +359,6 @@ eval << { "foo": "a", "foo": [ "bar", 40 + 2 ] } >> Y ?
 ```
 
 ```makam-hidden
-tests : testsuite. %testsuite tests.
-
 >> syntax.parse_opt expr << { "foo": [ "bar", 42 ] } >> X ?
 >> Yes:
 >> X := record [mkfield "foo" (array [stringconst "bar", intconst 42])].
