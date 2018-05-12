@@ -237,3 +237,7 @@ body {
 		display: block;
 	}
 }
+
+pre {
+    margin: 0px;
+}
