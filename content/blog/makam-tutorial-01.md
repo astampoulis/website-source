@@ -513,13 +513,31 @@ be reconstructing the concrete syntax of an abstract syntax tree -- namely, we w
 predicate as a pretty-printer for our terms.[^2] So maybe `parse_expr` is not such a great name for our
 predicate, since we could use it both as a parser and a pretty-printer of expressions.
 
-[^2]: The reality is more complicated of course -- using the same predicate for both kinds of queries is not always possible for free, or will not always terminate.
+[^2]: The reality is more complicated of course -- using the same predicate for both kinds of queries is not always possible for free, or will not always terminate. In a later post, we will explore this more in-depth.
 
 How about writing the predicate itself? Makam already has a `syntax` library that can help us
 implement syntax predicates like these by only giving a grammar for our language, similar to how
 parser generators are used in other languages. The details of how the library works is a topic for
-another time; it is also a relatively recent development, so its exact details might change.
-For now, I will just give an example of how to use it for our language.
+another time; it is also a relatively recent development, so its exact details might change.  For
+now, I will just give an example of how to use it for the language we have defined in this post, and will 
+just say that the parsing aspect of the library is based
+on [PEG parsing](https://pdos.csail.mit.edu/papers/parsing:popl04.pdf)[^3] and I am using an
+adaptation
+of
+[Invertible Syntax Descriptions](http://www.mathematik.uni-marburg.de/~rendel/rendel10invertible.pdf)[^4]
+to the PEG setting so that the same grammar is used both for parsing and pretty printing.
+
+[^3]: Bryan Ford. 2004. *Parsing expression grammars: a recognition-based syntactic foundation*. In Proceedings of the 31st ACM SIGPLAN-SIGACT symposium on Principles of programming languages (POPL '04). ACM, New York, NY, USA, 111-122. DOI: http://dx.doi.org/10.1145/964001.964011 
+[^4]: Tillmann Rendel and Klaus Ostermann. 2010. *Invertible syntax descriptions: unifying parsing and pretty printing*. In Proceedings of the third ACM Haskell symposium on Haskell (Haskell '10). ACM, New York, NY, USA, 1-12. DOI: https://doi.org/10.1145/1863523.1863525
+
+Before looking at the code, let me briefly explain the components that go into it. First, we
+need to define "syntax constructors" which are akin to typed non-terminals in grammars: for example,
+a syntax constructor with the type `syntax expr` will be used as a handle that allows us to parse
+and pretty-print terms of type `expr`. Then, we need to give syntactic rules, which describe how to
+parse/pretty-print each term constructor (like `stringconst`, `array`, etc.). Last, we need to generate
+parsing/pretty-printing code for each toplevel syntax constructor; this is akin to running a parser
+generator to get the parsing code for our grammar. This step, just as all the other steps, happens
+within the same Makam program instead of requiring an external parser generator.
 
 ```makam-hidden
 %open syntax.
@@ -529,28 +547,26 @@ For now, I will just give an example of how to use it for our language.
 baseexpr, expr : syntax expr.
 field : syntax field.
 
-`(syntax_rules {{
+`(syntax_rules <<
+
+  expr ->
+    add      { <baseexpr> "+" <expr> }
+  / baseexpr ;
 
   baseexpr ->
     stringconst { <makam.string_literal> }
   / intconst    { <makam.int_literal> }
   / array       { "[" <list_sep (token ",") expr> "]" }
   / record      { "{" <list_sep (token ",") field> "}" }
+  / { "(" <expr> ")" } ;
 
   field ->
     mkfield  { <makam.ident> ":" <expr> }
   / mkfield  { <makam.string_literal> ":" <expr> }
 
-  expr ->
-    add      { <baseexpr> "+" <expr> }
-  / baseexpr
-
-}}).
+>>).
 `( syntax.def_toplevel_js expr ).
 ```
-
-OK, let's unpack this a bit. The constructor definitions for `baseexpr`, `expr`, and `field` (...)
-**WIP from here on.**
 
 ```makam-hidden
 %extend syntax.
@@ -560,27 +576,82 @@ run Stx Str Tm :-
 %end.
 ```
 
+Let's try parsing and pretty-printing out:
+
 ```makam
-evalstring : string -> string -> prop.
-evalstring Input Output :-
-  syntax.run expr Input E, eval E V, syntax.run expr Output V.
-```
-
-
-```makam-input
-syntax.run expr << { "foo": [ "bar", 42 ] } >> X ?
-syntax.run expr X (array [intconst 5]) ?
-evalstring << { "foo": "a", "foo": [ "bar", 40 + 2 ] } >> Y ?
+syntax.run expr "{ foo: 1, bar: 2 + 2 }" Expr ?
+syntax.run expr String (record [ mkfield "foo" (intconst 5) ]) ?
 ```
 
 ```makam-hidden
->> syntax.run expr << { "foo": [ "bar", 42 ] } >> X ?
+>> syntax.run expr "{ foo: 1, bar: 2 + 2 }" Expr ?
 >> Yes:
->> X := record [mkfield "foo" (array [stringconst "bar", intconst 42])].
+>> Expr := record [ mkfield "foo" (intconst 1), mkfield "bar" (add (intconst 2) (intconst 2)) ].
 
->> evalstring << { "foo": "a", "foo": [ "bar", 40 + 2 ] } >> Y ?
+>> syntax.run expr String (record [ mkfield "foo" (intconst 5) ]) ?
 >> Yes:
->> Y := "{ foo : [ \"bar\" , 42 ] } ".
+>> String := "{ foo : 5 } ".
+```
+
+OK, let's unpack the code above a bit and explain what goes into it. The toplevel syntax constructor
+is `expr`, which we will use to parse and pretty-print expressions of our language. We also make use
+of two additional auxiliary syntaxes, one for base expressions and one for fields. `expr` represents
+the higher-precedence part of expressions -- right now, this just stands for infix addition -- while
+base expressions are the lower-precedence ones, which is everything else. The syntax library does
+not presently include any explicit support for describing precedence, and that's why we had to split
+into top-level and base expressions manually. Each syntax rule specifies the constructor that it is
+parsing/pretty-printing, along with any number of tokens and other syntax expressions that are
+needed. Each expression within the angle brackets needs to correspond to the type of each argument
+of the constructor: for example, in the first rule for the `mkfield` constructor, which requires a
+string followed by an expression, `makam.ident` is a syntax constructor of type `syntax string` and
+`expr` is of type `syntax expr`.  The `list_sep` incantation for `array` and `record` is used to
+parse/pretty-print a list with the specified separator, which here is the `","` token.
+
+One thing to note about the workings of these rules is that contrary to context-free grammars, the rules
+here are applied in order and the choice is deterministic: given two rules like `A / B`, we attempt to
+parse/pretty-print using `A`, and only if that fails `B` is attempted. This has implications both for
+parsing and pretty-printing: for example, if we switch the order of rules for `expr`, we will never get
+to the rule for `add` when parsing, as `baseexpr` is already parseable on its own, and that's the first
+prerequisite for `add`. For pretty-printing, the order of rules means that a record will be
+printed as `{ foo: ... }` instead of `{ "foo": ... }` for keys that are identifiers; the string notation
+will be used otherwise. Another note is that left recursion is not permitted, hence we could
+not have a rule for `add` like `<expr> "+" <expr>` but need to break the recursion through `baseexpr`.
+
+Last, one small note for the syntax of Makam itself and how these definitions actually work: the
+``(` notation stands for a call to a staging predicate: that is, a predicate that generates further
+Makam code that is "inserted" in place. Here, `syntax_rules` transforms these grammar rules (given
+as a plain string with the notation `<< .. >>`) into normal Makam rules that define parsing and
+pretty-printing; whereas `syntax.def_toplevel_js` generates some JavaScript code that is then inserted
+into a normal Makam predicate that will be used for parsing.
+
+With `syntax.run expr` defined, we can now define a predicate that is more akin
+to the input-output portion of a REPL for our language, that takes an expression as
+a concrete string as input, evaluates it and returns the result as a string again:
+
+```makam
+evalstring : (ExprStr: string) (ValueStr: string) -> prop.
+evalstring ExprStr ValueStr :-
+  syntax.run expr ExprStr Expr,
+  eval Expr Value,
+  syntax.run expr ValueStr Value.
+```
+
+We can now issue queries to try out our whole implementation so far. Note that
+this query block is editable, so you can try your own queries as well:
+
+```makam-input
+evalstring << { "foo": "a", "foo": [ "bar", 40 + 2 ] } >> X ?
+evalstring << [ 1 + (12 + 12) ] >> X ?
+```
+
+```makam-hidden
+>> evalstring << { "foo": "a", "foo": [ "bar", 40 + 2 ] } >> X ?
+>> Yes:
+>> X := "{ foo : [ \"bar\" , 42 ] } ".
+
+>> evalstring << [ 1 + (12 + 12) ] >> X ?
+>> Yes:
+>> X := "[ 25 ] ".
 ```
 
 # Conclusion
