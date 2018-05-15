@@ -15,6 +15,14 @@ I started working on the design and implementation of Makam in 2012 at MIT, unde
 supervision of [Prof. Adam Chlipala](http://adam.chlipala.net/), and continue to work on it as a
 personal project at [Originate NYC](http://www.originate.com/).
 
+# Tutorial series
+
+I have started a series of posts that introduce Makam and show examples of how to use it
+for prototyping small languages. They aim to be pretty self-contained, only assuming
+familiarity with functional programming languages.
+
+1. [Introducing abstract and concrete syntax; implementing an interpreter for a toy language; implementing concrete syntax in Makam.](/blog/makam-tutorial-01/)
+
 # Code, papers and slides.
 
 - [The GitHub repository for Makam](http://github.com/astampoulis/makam).
@@ -22,8 +30,8 @@ personal project at [Originate NYC](http://www.originate.com/).
   official GitHub repository for it.
 - [Technical Overview](techoverview.pdf). A paper describing the
     main technical features of Makam, which is the closest thing that
-    we have right now to a language tutorial (expect a proper tutorial
-    soon though!)
+    we have right now to a more in-depth language reference. Still, this is quite
+    dated at this point, so expect newer material soon.
 - [Slides for the CRSX User Meeting](slides-crsx.pdf). These are
     the slides for a talk I gave in the 2nd CRSX User Meeting, in Two
     Sigma NYC. They describe the main features of Makam and are a good

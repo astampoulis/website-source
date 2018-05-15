@@ -14,7 +14,7 @@ the first such literate post -- so go ahead and evaluate the code of
 this web page, or even try editing the final queries before
 evaluating, using the two buttons on the bottom-right of the page!
 
-<!-- more -->
+<!--more-->
 
 It goes without saying what the first query utilizing this interface
 should be:

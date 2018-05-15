@@ -1,11 +1,14 @@
 ---
 date: 2018-03-19T18:16:01-04:00
 title: "Makam Tutorial 1: Prototyping a toy language and its interpreter"
+type: post
 ---
 
 *In this post, we'll implement a toy interpreter for a small functional language. We will use Makam,
 which is a language that helps in the 'initial spiking phase' of designing a new language, allowing
 for a tight feedback loop and for iterating quickly.*
+
+<!--more-->
 
 Some time ago I was designing and implementing a language: there was a class of programs that were
 hard to write and I wanted better ways to express them.
@@ -14,8 +17,6 @@ There were a lot of decisions to make. For starters, *what should the constructs
 be*?  How do these constructs enable writing the example programs that I had in mind? Which
 constructs should be the "core" ones of the language, and which ones should be defined in terms of
 them?
-
-<!-- more -->
 
 ```makam-hidden
 tests : testsuite. %testsuite tests.
@@ -112,7 +113,7 @@ in a way that is human-readable, but we could have different syntaxes for the sa
 
 Instead, we can separate those two concerns into two parts: one where we just give an explicit name
 to each constructor and describe what its constituents are (how many are there and of what sorts) --
-on paper, we could denote that with something like "$\text{add}(e_1, e_2)$''; and one where we
+on paper, we could denote that with something like "$\text{add}(e_1, e_2)$"; and one where we
 describe what the real syntactic form for the constructor is when we write out a program in the
 language. When we talk about **abstract syntax**, we refer to the first part; and **concrete
 syntax** is the latter one.
@@ -202,7 +203,7 @@ We have to pause working on our toy language implementation for a bit to first e
 about how computation in Makam works.
 
 Say that instead of using Makam, we were using a functional language. One of the main operations
-of functional languages is *pattern-matching*: we try to match a terms against a pattern; if
+of functional languages is *pattern-matching*: we try to match a term against a pattern; if
 the match is successful, we proceed to take the corresponding branch.  Patterns are kind of like
 "templates" for terms: some parts are explicitly specified, while others are allowed to be
 arbitrary. Another way to say this, is that if terms are like trees, patterns are like "trees with
@@ -576,7 +577,8 @@ run Stx Str Tm :-
 %end.
 ```
 
-Let's try parsing and pretty-printing out:
+Let's try parsing and pretty-printing out. We will use the `syntax.run` predicate, which does
+either of these two depending on its arguments:
 
 ```makam
 syntax.run expr "{ foo: 1, bar: 2 + 2 }" Expr ?
