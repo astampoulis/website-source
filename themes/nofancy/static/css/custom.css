@@ -151,8 +151,9 @@ body {
 	overflow:auto;
 	padding:0;
 	padding-bottom:3em;
-	font-size:16px;
+	font-size:18px;
 	line-height:1.4;
+        text-align: justify;
 }
 
 .post a {
@@ -166,6 +167,7 @@ body {
 }
 
 .post h1 {
+        padding-top: 28px;
 	font-size:28px;
 }
 
@@ -234,4 +236,8 @@ body {
 	.desktop {
 		display: block;
 	}
+}
+
+pre {
+    margin: 0px;
 }

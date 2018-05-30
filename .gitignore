@@ -2,3 +2,4 @@
 /content/**/*.makam
 /static/blog/*.md
 /static/blog/**/*.md
+.makam-cache
