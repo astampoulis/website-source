@@ -10,6 +10,10 @@ for a tight feedback loop and for iterating quickly.*
 
 <!--more-->
 
+```makam-hidden
+tests : testsuite. %testsuite tests.
+```
+
 Some time ago I was designing and implementing a language: there was a class of programs that were
 hard to write and I wanted better ways to express them.
 
@@ -17,10 +21,6 @@ There were a lot of decisions to make. For starters, *what should the constructs
 be*?  How do these constructs enable writing the example programs that I had in mind? Which
 constructs should be the "core" ones of the language, and which ones should be defined in terms of
 them?
-
-```makam-hidden
-tests : testsuite. %testsuite tests.
-```
 
 What does it mean to use the language? How do you write programs in it -- what's the syntax like,
 what information can one get about their programs (and how much of it can be inferred)?  What do the
@@ -240,11 +240,6 @@ Matching them against each other might force instantiations on either one of the
 them (in different parts of them); some parts might even remain unknown after the unification. The
 unknown parts are called *unification variables* and are denoted with identifiers starting with an
 uppercase letter, whereas the identifiers of normal term constructors start with a lowercase letter.
-
-```makam-hidden
-unify : A -> A -> prop.
-unify X X.
-```
 
 ```makam
 unify (add (intconst N1) X2) (add X1 (intconst N2)) ?
@@ -567,14 +562,6 @@ field : syntax field.
 
 >>).
 `( syntax.def_toplevel_js expr ).
-```
-
-```makam-hidden
-%extend syntax.
-run : syntax A -> string -> A -> prop.
-run Stx Str Tm :-
-  if (refl.isunif Str) then syntax.pretty Stx Tm Str else syntax.parse_opt Stx Str Tm.
-%end.
 ```
 
 Let's try parsing and pretty-printing out. We will use the `syntax.run` predicate, which does
