@@ -89,11 +89,11 @@ if we were encoding an imperative language that included statements and statemen
 have separate sorts for them, like:
 
 `$$\begin{array}{llll}
-st & \text{(statements)} & ::= & x = e; \; | \; \text{return} \; e; \; | \;
+st & \text{(statements)} & ::= & x = e; \; | \; \text{return} \; e;
     \; | \; \text{if} \; (e) \; \text{then} \; b_1 \; \text{else} \; b_2; \; | \; \\
 & & & 
-    \text{for} \; (\text{const} \; x \; \text{in} \; e) \; b; \; | \;
-    \; | \; \text{for} \; (\text{const} \; x \; \text{of} \; e) \; b; \; | \; \cdots \\
+    \text{for} \; (\text{var} \; x \; \text{in} \; e) \; b;
+    \; | \; \text{for} \; (\text{var} \; x \; \text{of} \; e) \; b; \; | \; \cdots \\
 b & \text{(blocks)} & ::= & \{ \; st_1 \; \cdots \; st_n \; \}
 \end{array}$$`
 
@@ -184,7 +184,7 @@ sugar for lists of the form `[1, 2, 3]` or even `1 :: 2 :: 3 :: []`. These decla
 the constructor notation is like when a constructor needs no arguments, as is the case for `true`
 and `false`.
 
-We have left the constructor for records out. We can view records as a list of fields, where each
+We have left the constructor for records out. We can view records as lists of fields, where each
 field pairs together a key with a value:
 
 ```makam
@@ -213,7 +213,7 @@ holes":
 
 We give names to the holes, so as to be able to refer to them -- these are the *pattern variables*.
 Pattern matching basically tries to find a way to fill in these holes in the pattern so that it
-matches the term exactly.  So its result when its successful is an instantiation (or substitution)
+matches the term exactly.  So its result when it's successful is an instantiation (or substitution)
 for the pattern variables:
 
 <center><img src="/blog/makam-tutorial-01-pic3.svg" alt="Pattern" width="550" /></center>
@@ -238,8 +238,8 @@ more general, version of pattern matching: instead of having a "pattern" with po
 and a "term" that is fully known, we have two patterns that might both have unknown parts in them.
 Matching them against each other might force instantiations on either one of them, or even on both of
 them (in different parts of them); some parts might even remain unknown after the unification. The
-unknown parts are called *unification variables* and are denoted with identifiers starting with an
-uppercase letter, whereas the identifiers of normal term constructors start with a lowercase letter.
+unknown parts are called *unification variables* and are denoted with identifiers starting with
+uppercase letters, whereas the identifiers of normal term constructors start with lowercase letters.
 
 ```makam
 unify (add (intconst N1) X2) (add X1 (intconst N2)) ?
@@ -254,15 +254,15 @@ unify (add (intconst N1) X2) (add X1 (intconst N2)) ?
 ```
 
 (Note the color-coding on the side of codeblocks of this post: blue blocks are things that will be sent
-to Makam, which become green after a successful run, and grey ones are skipped. Any esults from the Makam
+to Makam, which become green after a successful run, and grey ones are skipped. Any results from the Makam
 interpreter, or any errors, show up as annotations in each codeblock.)
 
-This choice has a wide-ranging implication on how computation in logic programming actually looks
-like.  In a functional language, at the point where a function is applied, its inputs are fully
-known (or at least fully knowable, in a call-by-need language), whereas outputs are fully unknown,
-to be determined through evaluation of the function. In a logic programming language, there is no
-need to explicitly separate inputs from outputs: both of them could only be partially known at the
-point where a "function" is applied, and unification will reconcile the known and unknown parts.  So
+This choice has a wide-ranging implication on how computation in logic programming actually looks.
+In a functional language, at the point where a function is applied, its inputs are fully known (or
+at least fully knowable, in a call-by-need language), whereas outputs are fully unknown, to be
+determined through evaluation of the function. In a logic programming language, there is no need to
+explicitly separate inputs from outputs: both of them could only be partially known at the point
+where a "function" is applied, and unification will reconcile the known and unknown parts.  So
 instead of functions we talk about *predicates*: these describe relations between terms, without
 explicitly designating some of them as inputs and some as outputs. What is an input and what is an
 output depends on the arguments that the predicates are called with. Here is an example of the
@@ -564,7 +564,7 @@ field : syntax field.
 `( syntax.def_toplevel_js expr ).
 ```
 
-Let's try parsing and pretty-printing out. We will use the `syntax.run` predicate, which does
+Let's try out parsing and pretty-printing. We will use the `syntax.run` predicate, which does
 either of these two depending on its arguments:
 
 ```makam
