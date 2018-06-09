@@ -14,11 +14,11 @@ for a tight feedback loop and for iterating quickly.*
 tests : testsuite. %testsuite tests.
 ```
 
-Some time ago I was designing and implementing a language: there was a class of programs that were
-hard to write and I wanted better ways to express them.
+Say you are designing and implementing a new language: there is a class of programs that are
+hard to write in languages that are presently available and you want better ways to express them.
 
-There were a lot of decisions to make. For starters, *what should the constructs of the language
-be*?  How do these constructs enable writing the example programs that I had in mind? Which
+There are a lot of decisions to make. For starters, *what should the constructs of the language
+be*?  How do these constructs enable writing the example programs that you have in mind? Which
 constructs should be the "core" ones of the language, and which ones should be defined in terms of
 them?
 
@@ -27,11 +27,11 @@ what information can one get about their programs (and how much of it can be inf
 constructs of the language mean -- how do you compute with them, how do they relate to the
 constructs in existing languages?
 
-Coming up with answers to these questions is an iterative process: I would start with some answers,
+Coming up with answers to these questions is an iterative process: you can start with some answers,
 try to write example programs, see what works and what does not, and adapt accordingly. Implementing
-the language was quite crucial to this process: actually using the language revealed patterns
-that were important but that I wouldn't have found otherwise -- so that informed how to refine the
-language further and what constructs to add.
+the language is quite crucial to this process: actually using the language reveals patterns that are
+important but that you couldn't necessarily have found otherwise -- so that informs how to refine
+the language further and what constructs to add.
 
 Still, implementing a language takes a long time, which hinders this experimentation and refinement
 process. There is a long "feedback" loop involved between having a new language design idea and
@@ -129,9 +129,11 @@ expr : type.
 
 There are built-in sorts for strings and integers in Makam; booleans and lists are already defined
 in its standard library. Like in most functional languages, all elements of a list are of the same
-type, so lists of expressions are a different type than, say, lists of strings.
+type. So lists of expressions are a different type than, say, lists of strings: `list expr`
+vs. `list string`. There's two ways to write down a list; either in the form `[1, 2, 3]`, or
+in the form `1 :: 2 :: 3 ::  Nil`, similar to other functional languages.
 
-We can now define the constructors for expressions as follows:
+With these in mind, we can define the constructors for expressions as follows:
 
 ```makam
 stringconst : (S: string) -> expr.
@@ -167,24 +169,7 @@ from the fact that we can define new constructors for an existing type at any po
 useful for experimentation -- we can define a 'base version' of a language first, and then try
 adding new constructs later, in a separate place, without changing the base definition.
 
-For completeness, let's look at the definition of booleans and lists:
-
-```makam-noeval
-bool : type.
-true : bool.
-false : bool.
-
-list : (A: type) -> type.
-nil : list A.
-cons : (Head: A) (Tail: list A) -> list A.
-```
-
-Lists are type constructors: that is, for each type `A`, `list A` is a type. There is syntactic
-sugar for lists of the form `[1, 2, 3]` or even `1 :: 2 :: 3 :: []`. These declarations show what
-the constructor notation is like when a constructor needs no arguments, as is the case for `true`
-and `false`.
-
-We have left the constructor for records out. We can view records as lists of fields, where each
+We have left the constructor for records out. We can view a record as a list of fields, where each
 field pairs together a key with a value:
 
 ```makam
@@ -233,13 +218,22 @@ pattern_match
 >> X := intconst 3.
 ```
 
-Logic programming instead treats *unification* as one of the key operations. This is the symmetric,
-more general, version of pattern matching: instead of having a "pattern" with potentially unknown parts,
-and a "term" that is fully known, we have two patterns that might both have unknown parts in them.
-Matching them against each other might force instantiations on either one of them, or even on both of
-them (in different parts of them); some parts might even remain unknown after the unification. The
-unknown parts are called *unification variables* and are denoted with identifiers starting with
+Logic programming instead allows terms to *include unknown parts* in them and treats *unification*
+as one of the key operations.  This is the symmetric, more general, version of pattern matching:
+instead of having a "pattern" with potentially unknown parts on the left, and a fully known "term"
+on the right, we have two terms with potentially unknown parts in them, and we are trying to
+reconcile them against each other. This process might force instantiations on either one of them,
+making previously unknown parts known, or even on both of them (in different parts of them). Some
+things might even remain unknown after the unification. To be able to refer to them, we give names
+to the unknown parts -- so an unknown part is a special kind of a variable, referred to as a
+*unification variables*.
+
+<center><img src="/blog/makam-tutorial-01-pic4.svg" alt="Pattern" width="550" /></center>
+
+In Makam, unification variables are denoted with identifiers starting with
 uppercase letters, whereas the identifiers of normal term constructors start with lowercase letters.
+Here's an example of a query that performs unification between two terms, corresponding to the example
+above:
 
 ```makam
 unify (add (intconst N1) X2) (add X1 (intconst N2)) ?
@@ -318,11 +312,15 @@ eval (add (intconst 1) (intconst 2)) Value ?
 ```
 
 Of course, this query fails at this point, as we have not given any kind of implementation for the
-`eval` predicate. We do this by giving *rules* for the predicate: basically, we define the cases
-for which the `eval Expr Value` proposition holds. Each rule has a *goal* and optional *premises*.
-Given the current query `Q`, we attempt to unify it with the goal of each rule and proceed to
-the premises, treating them as subsequent queries that need to be satisfied. For example, here are the cases
-for integer constants and integer addition:
+`eval` predicate. We do this by giving *rules* for the predicate: basically, we define the cases for
+which the `eval Expr Value` proposition holds. Each rule has a *goal* and optional *premises*,
+written roughly as `goal :- premises` (note the "`:-`" which can be read as **"when"**). The way
+these rules are executed is like this: given the current query `Q` that we are trying to solve, we
+attempt to unify it with the goal of each rule; if unification is successful, we proceed to the
+premises, treating them as subsequent queries that need to be satisfied. 
+
+To start with, here are the rules that we would add to evaluate integer constants and integer
+addition:
 
 ```makam
 eval (intconst I) (intconst I).
@@ -333,7 +331,7 @@ eval (add E1 E2) (intconst N) :-
 ```
 
 The first rule says: integer constants evaluate to themselves (because they are already values).
-The second one can be read as: the `add` expression evaluates to an integer constant `N`, when
+The second one can be read as: the `add` expression evaluates to an integer constant `N`, *when*
 the two operands evaluate to the integer constants `N1` and `N2`, and we also have `N = N1 + N2`.
 With these two rules, the query from above should now work:
 
@@ -382,31 +380,19 @@ the operands to `add` evaluate to the same type of constant. That could be a del
 depending on how we want evaluation in our language to behave.
 
 How about arrays? For an array like `[1 + 2, "foo" + "bar"]`, every member of the array needs to
-be evaluated. We can use a helper predicate `eval_list` to do that, as follows:
-
-```makam-noeval
-eval_list : (Exprs: list expr) (Vals: list expr) -> prop.
-eval (array ES) (array VS) :- eval_list ES VS.
-eval_list [] [].
-eval_list (E :: ES) (V :: VS) :- eval E V, eval_list ES VS.
-```
-
-We can do better than this though: remember when we said that Makam is a *higher-order* logic
-programming language? That means that we can define higher-order predicates (predicates that
-take other predicates as arguments), similarly to how we can define higher-order functions
-in a higher-order functional programming language. One example of such a predicate is `map`
-for lists, which is defined as follows in the Makam standard library:
-
-```makam-noeval
-map Pred [] [].
-map Pred (X :: XS) (Y :: YS) :- Pred X Y, map Pred XS YS.
-```
-
-Evaluation for arrays can thus be written as:
+be evaluated. We can describe this using two rules:
 
 ```makam
-eval (array ES) (array VS) :- map eval ES VS.
+eval (array []) (array []).
 
+eval (array (HeadExpr :: TailExprs))
+     (array (HeadVal :: TailVals)) :-
+  eval HeadExpr HeadVal, eval (array TailExprs) (array TailVals).
+```
+
+Let's try this out:
+
+```makam
 eval (array [
        add (intconst 1) (intconst 2),
        add (stringconst "foo") (stringconst "bar")])
@@ -416,6 +402,25 @@ eval (array [
 >> Yes:
 >> Value := array [ intconst 3, stringconst "foobar" ].
 ```
+
+(As an aside -- we can do better than this. Remember when we said that Makam is a *higher-order* logic
+programming language? That means that we can define higher-order predicates -- predicates that
+take other predicates as arguments -- similarly to how we can define higher-order functions
+in a higher-order functional programming language. One example of such a predicate is `map`
+for lists, which is defined as follows in the Makam standard library:
+
+```makam-noeval
+map Pred [] [].
+map Pred (X :: XS) (Y :: YS) :- Pred X Y, map Pred XS YS.
+```
+
+The evaluation rule for arrays would then be:
+
+```makam-noeval
+eval (array Exprs) (array Vals) :- map eval Exprs Vals.
+```
+
+More on this on a later installment.)
 
 Evaluating records is a little more complicated. We need to
 evaluate the expressions contained within them, so that `{ foo: 1 + 1, bar: 2 + 2 }`
@@ -464,7 +469,7 @@ eval (record (mkfield Key Expr :: Rest))
 ```
 
 Note the use of `not` here: basically, we are saying that this last rule applies whenever
-`contains_key Rest Key` is not successful[^1]. 
+`contains_key Rest Key` is not successful[^1].
 
 [^1]: Negation in logic programming languages is a big topic, mostly because it breaks many of the invariants that hold about the language otherwise. For example: adding a new rule only makes more queries succeed, instead of making queries fail when they were previously succeeding; this does not hold in the presence of negation.
 
@@ -515,7 +520,7 @@ How about writing the predicate itself? Makam already has a `syntax` library tha
 implement syntax predicates like these by only giving a grammar for our language, similar to how
 parser generators are used in other languages. The details of how the library works is a topic for
 another time; it is also a relatively recent development, so its exact details might change.  For
-now, I will just give an example of how to use it for the language we have defined in this post, and will 
+now, I will just give an example of how to use it for the language we have defined in this post, and will
 just say that the parsing aspect of the library is based
 on [PEG parsing](https://pdos.csail.mit.edu/papers/parsing:popl04.pdf)[^3] and I am using an
 adaptation
@@ -523,7 +528,7 @@ of
 [Invertible Syntax Descriptions](http://www.mathematik.uni-marburg.de/~rendel/rendel10invertible.pdf)[^4]
 to the PEG setting so that the same grammar is used both for parsing and pretty printing.
 
-[^3]: Bryan Ford. 2004. *Parsing expression grammars: a recognition-based syntactic foundation*. In Proceedings of the 31st ACM SIGPLAN-SIGACT symposium on Principles of programming languages (POPL '04). ACM, New York, NY, USA, 111-122. DOI: http://dx.doi.org/10.1145/964001.964011 
+[^3]: Bryan Ford. 2004. *Parsing expression grammars: a recognition-based syntactic foundation*. In Proceedings of the 31st ACM SIGPLAN-SIGACT symposium on Principles of programming languages (POPL '04). ACM, New York, NY, USA, 111-122. DOI: http://dx.doi.org/10.1145/964001.964011
 [^4]: Tillmann Rendel and Klaus Ostermann. 2010. *Invertible syntax descriptions: unifying parsing and pretty printing*. In Proceedings of the third ACM Haskell symposium on Haskell (Haskell '10). ACM, New York, NY, USA, 1-12. DOI: https://doi.org/10.1145/1863523.1863525
 
 Before looking at the code, let me briefly explain the components that go into it. First, we
@@ -546,7 +551,7 @@ field : syntax field.
 `(syntax_rules <<
 
   expr ->
-    add      { <baseexpr> "+" <expr> }
+    add         { <baseexpr> "+" <expr> }
   / baseexpr ;
 
   baseexpr ->
@@ -557,8 +562,8 @@ field : syntax field.
   / { "(" <expr> ")" } ;
 
   field ->
-    mkfield  { <makam.ident> ":" <expr> }
-  / mkfield  { <makam.string_literal> ":" <expr> }
+    mkfield     { <makam.ident> ":" <expr> }
+  / mkfield     { <makam.string_literal> ":" <expr> }
 
 >>).
 `( syntax.def_toplevel_js expr ).
