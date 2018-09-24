@@ -28,10 +28,9 @@ familiarity with functional programming languages.
 - [The GitHub repository for Makam](http://github.com/astampoulis/makam).
   Makam is free software, released under the GPLv3. This is the
   official GitHub repository for it.
+- [Our ICFP 2018 paper](https://github.com/astampoulis/makam-paper-funpearl/raw/master/published.pdf), "Prototyping a Functional Language using Higher-Order Logic Programming: A Functional Pearl on Learning the Ways of λProlog/Makam", Antonis Stampoulis and Adam Chlipala. This is a functional pearl demonstrating the development of a MetaML-like type system in Makam. It serves both as a λProlog/Makam tutorial and also explains the details of some useful Makam design patterns, such as encoding complex binding structures and writing structurally recursive definitions while avoiding boilerplate. The paper is a fun read (for some definitions of "fun"), written in the style of a play between [Roza Eskenazi](https://en.wikipedia.org/wiki/Roza_Eskenazi) and [Hagop Stambulyan](https://en.wikipedia.org/wiki/Agapios_Tomboulis), reimagined as programming language researchers. The [paper repository](https://github.com/astampoulis/makam-paper-funpearl/) includes all code, together with the [artifact](https://github.com/astampoulis/makam-paper-funpearl/raw/master/makam-funpearl-artifact.zip) and the [presentation](https://rawgit.com/astampoulis/makam-paper-funpearl/master/slides/index.html).
 - [Technical Overview](techoverview.pdf). A paper describing the
-    main technical features of Makam, which is the closest thing that
-    we have right now to a more in-depth language reference. Still, this is quite
-    dated at this point, so expect newer material soon.
+    main technical features of Makam (quite dated at this point)
 - [Slides for the CRSX User Meeting](slides-crsx.pdf). These are
     the slides for a talk I gave in the 2nd CRSX User Meeting, in Two
     Sigma NYC. They describe the main features of Makam and are a good
