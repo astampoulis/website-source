@@ -4,6 +4,6 @@ set -e
 
 OUTPUT_FILE=$(mktemp)
 
-( tail -f $OUTPUT_FILE | until ( ! grep -q "Change detected" ); do echo "hello!"; make copy-makam-posts; done ) &
+( tail -f $OUTPUT_FILE | until ( ! grep -q "Change detected" ); do make copy-makam-posts; done ) &
 hugo server --baseURL http://localhost:1313/ --logFile $OUTPUT_FILE
 rm $OUTPUT_FILE

@@ -20,7 +20,7 @@ jobs:
       - run: &install-hugo
           name: Install Hugo
           command: |
-            (mkdir -p /tmp/hugo; cd /tmp/hugo; wget --output-document=/dev/stdout https://github.com/gohugoio/hugo/releases/download/v0.24/hugo_0.24_Linux-64bit.tar.gz | tar xvzf -) && mv /tmp/hugo/hugo /usr/local/bin/
+            (mkdir -p /tmp/hugo; cd /tmp/hugo; wget --output-document=/dev/stdout https://github.com/gohugoio/hugo/releases/download/v0.32/hugo_0.32_Linux-64bit.tar.gz | tar xvzf -) && mv /tmp/hugo/hugo /usr/local/bin/
       - run: &build-site
           name: Build site
           command: make build
