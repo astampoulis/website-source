@@ -46,7 +46,7 @@ development has been on an on-and-off basis as a personal project while
 at [Originate](http://www.originate.com), but over the past six months or so I've been working quite
 a bit on it.
 
-This post contains Makam code that you can run using the Play button on the bottom-right corner; you
+**This post contains Makam code that you can run using the Play button on the bottom-right corner**; you
 can also edit the final code block to try out your own examples (the second button will take you
 there). You can also follow
 the [installation instructions](https://github.com/astampoulis/makam#installation) for Makam and run

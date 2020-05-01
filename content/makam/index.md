@@ -6,9 +6,9 @@ type: main
 Makam is a metalanguage: a language for implementing languages. It supports
 concise declarative definitions, aimed at allowing rapid prototyping and experimentation
 with new programming language research ideas. The design of Makam is based on higher-order logic
-programming and is a refinement of the λProlog language. Makam is implemented from scratch in OCaml.
+programming and is a refinement of the [λProlog](http://www.lix.polytechnique.fr/~dale/lProlog/) language. Makam is implemented from scratch in OCaml.
 
-The name comes from the makam/maqam of traditional Turkish and Arabic music: a set of
+The name comes from the [makam/maqam](https://en.wikipedia.org/wiki/Turkish_makam) of traditional Turkish and Arabic music: a set of
 techniques of improvisation, defining the pitches, patterns and development of a piece of music.
 
 I started working on the design and implementation of Makam in 2012 at MIT, under the
