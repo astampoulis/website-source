@@ -23,6 +23,15 @@ familiarity with functional programming languages.
 
 1. [Introducing abstract and concrete syntax; implementing an interpreter for a toy language; implementing concrete syntax in Makam.](/blog/makam-tutorial-01/)
 
+# Taksims in language design series
+
+This a more experimental series of posts, where I might be talking about design aspects of existing
+languages, and exploring design ideas for Makam and other languages. They assume some familiarity
+with Makam and logic programming already. By the way, a [taksim](https://en.wikipedia.org/wiki/Taqsim) is an improvised
+musical introduction before performing a traditional composition.
+
+- [A language design taksim on mode declarations for Makam](/blog/taksim-modes-makam/)
+
 # Code, papers and slides.
 
 - [The GitHub repository for Makam](http://github.com/astampoulis/makam).
