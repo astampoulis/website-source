@@ -188,7 +188,7 @@ given an unknown type like `T` as input, we should not unify it with the
 `arrow A1 A2` term; instead, we should check that `T` *already*
 looks like `arrow A1 A2`. So we should perform *pattern matching*
 rather than *unification* with `arrow A1 A2`. Fortunately,
-Makam provides us with a `pattern_match` implementation that behaves
+Makam provides us with a [`pattern_match` implementation](https://github.com/astampoulis/makam/blob/a2815a711b0257774308cd2bae21f22ee41c3030/stdlib/reify.makam#L173-L193) that behaves
 as expected:
 
 ```makam
