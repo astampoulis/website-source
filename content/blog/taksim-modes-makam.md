@@ -8,10 +8,6 @@ In this post, we will explore a few design ideas related to integrating mode dec
 
 <!--more-->
 
-## todo
-
-This post is WIP. To keep track of updates, follow this [PR](https://github.com/astampoulis/website-source/pull/2).
-
 ## intro
 
 Recommended soundtrack: [Kalthoum (Alf Leila Wa Leila), by Ibrahim Maalouf](https://open.spotify.com/album/1Agh6GiahtO2bt4t5zLJR2)
@@ -305,7 +301,7 @@ decompose_term Term Head Args :-
   dyn.to_args ArgsDyn Args.
 
 recompose_term : [Full Head] Head -> args Head Full -> Full -> prop.
-recompose_term Head Args Term :-
+recompose_term Head Args Term when not(refl.isunif Head) :-
   args.applyfull Head Args Term.
 
 %end.
@@ -642,7 +638,7 @@ call the wrapper predicates recursively in the premises rather than the `_rules`
 %end.
 ```
 
-#### recap and future
+## recap and future
 
 We have found a couple of ways to take mode specifications into account without having to change the core of Makam. Unfortunately, none of these two solutions are ideal:
 
@@ -661,7 +657,11 @@ the scenes. Still, there's a few design questions for this feature:
 - how would multiple transformers work out?
 - could we have a nice way in an IDE to switch between the pre-transformation rules and the post-transformation rules?
 
-Still, one good thing that we found is that the mode specification part itself looks quite nice and does not need to be part of the core language. Are these kinds of mode specifications general enough though?
+Still, one good thing that we found is that the mode specification part itself looks quite nice and does not need to be part of the core language. Are these kinds of mode specifications general enough though? In the next part, we will explore a generalization of the mode specifications that can cover more situations, such as higher-order predicates and predicates with mixed argument modes. We will also see if we can use the metaprogramming support of Makam to turn the *bidirectional recipe itself* into a predicate.
+
+## todo
+
+The next part is not done yet! You can watch the [source repository](https://github.com/astampoulis/website-source) of this blog for updates.
 
 ```makam-hidden
 %end.
