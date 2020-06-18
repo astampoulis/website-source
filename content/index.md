@@ -13,6 +13,8 @@ I was previously the Director of Engineering at [Originate NYC](http://www.origi
 and at [Yale](http://cpsc.yale.edu/). You can find some of the things that I've worked on below, or
 read new posts to this site as [a blog](/blog). Feel free to [drop me a line]({{< mailto-url >}})!
 
+I dedicate part of my time to finding ways to help with climate crisis mitigation, by supporting organizations working towards this. I am presently advising the [US Coalition on Sustainability](https://www.uscoalitiononsustainability.org/), which aims to accelerate progress on achieving the UN's Sustainable Development Goals.
+
 ## Research
 
 * [Makam](/makam), a meta-language meant for prototyping and experimenting with new programming language ideas,
