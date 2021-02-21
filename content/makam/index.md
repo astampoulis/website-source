@@ -31,6 +31,7 @@ with Makam and logic programming already. By the way, a [taksim](https://en.wiki
 musical introduction before performing a traditional composition.
 
 - [A language design taksim on mode declarations for Makam](/blog/taksim-modes-makam/)
+- [A language design taksim on mode declarations for Makam, part 2](/blog/taksim-modes-makam-2/)
 
 # Code, papers and slides.
 
