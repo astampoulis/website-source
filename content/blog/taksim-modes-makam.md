@@ -4,7 +4,7 @@ title: "A language design taksim on mode declarations for Makam"
 type: post
 ---
 
-In this post, we will explore a few design ideas related to integrating mode declarations into Makam, using bidirectional typing as an example. This feature is still in the design phase, so I'd be glad to hear comments and ideas!
+In this post, we will explore a few design ideas related to integrating mode declarations into Makam, using bidirectional typing as an example. This feature is experimental, so I'd be glad to hear comments and ideas!
 
 <!--more-->
 
@@ -12,7 +12,9 @@ In this post, we will explore a few design ideas related to integrating mode dec
 
 Recommended soundtrack: [Kalthoum (Alf Leila Wa Leila), by Ibrahim Maalouf](https://open.spotify.com/album/1Agh6GiahtO2bt4t5zLJR2)
 
-Thoughts for this post came from reading [J. Dunfield](http://research.cs.queensu.ca/home/joshuad/) and [Neel Krishnaswami](https://semantic-domain.blogspot.com/)'s [survey on bidirectional typing](https://arxiv.org/abs/1908.05839), as well as other discussions.
+The taksim in the title refers to an improvised musical introduction to an known composition in a specific makam.
+
+Thoughts for this post came from reading [Jana Dunfield](https://research.cs.queensu.ca/home/jana/) and [Neel Krishnaswami](https://semantic-domain.blogspot.com/)'s [survey on bidirection al typing](https://arxiv.org/abs/1908.05839), as well as discussions on mode support in logic programming languages.
 
 You can run the code in this post in your browser, through the
 Makam Web UI. Click on the play button on the bottom-right corner, or press Ctrl+Enter!
@@ -45,7 +47,7 @@ append [1, 2, 3] InputList2 [1, 2, 3, 4, 5] ?
 >> InputList2 := [4, 5].
 ```
 
-[^1]: In Makam unfortunately the usefulness of this feature is limited for programming language settings, due to the naive depth-first search procedure used. For great examples of this in a PL context, look at [A Unified Approach to Solving Seven Programming Problems](http://io.livecode.ch/learn/gregr/icfp2017-artifact-auas7pp) by William Byrd et al.
+[^1]: In Makam unfortunately the usefulness of this feature is limited for programming language settings, due to the naive depth-first search procedure used. For great examples of this in a PL context using miniKanren, look at [A Unified Approach to Solving Seven Programming Problems](http://io.livecode.ch/learn/gregr/icfp2017-artifact-auas7pp) by William Byrd et al.
 
 Still, in many cases, it is useful to be able to specify and restrict the modes under which a predicate is used.
 This is especially useful when we are trying to accurately model existing type inferencing algorithms.
@@ -89,9 +91,9 @@ Here's the structure of the rest of this.
 
 - What happens if we transcribe the bidirectional system for the STLC directly? [→ example, naively](#example-naively)
 - How can we model bidirectional typing accurately? [→ example, manually](#example-manually)
-- It would be nice to be able to fix this just by adding a mode declaration for `type_synth` and `type_check`. Can we add mode declarations to Makam? Is there a way to do this without changing the core language? [→ modes in makam](#modes-in-makam)
-- Do simple mode declarations provide enough generality? (TODO) [→ modes in makam, take 2](#todo)
-- Can we turn the bidirectional recipe into a Makam program, to "bidirectionalize" an existing typing declaration? (TODO) [→ writing recipes in makam](#todo)
+- It would be nice to be able to fix this just by adding a mode declaration for `type_synth` and `type_check`. Can we add mode declarations to Makam? [→ modes in makam](#modes-in-makam)
+- Can we handle the mode declarations nicely, without without changing the core language? [→ modes in makam, take 2](/blog/taksim-modes-makam-2/#mode-declarations-through-command-transformers)
+- Could we do mode checking instead of enforcing a mode? [→ mode checking](/blog/taksim-modes-makam-2/#mode-checking)
 
 ## example, naively
 
@@ -107,7 +109,7 @@ type_check : expr -> typ -> prop.
 
 As a first step, let's look at the basic bidirectional typing rules for the simply-typed lambda calculus, and try to transcribe them directly to Makam. Following the definitions in the [survey](https://arxiv.org/pdf/1908.05839) paper mentioned above (Figure 1), the rules are:
 
-<center><img src="/blog/taksim-modes-bidir-spec.svg" alt="Abstract syntax tree" width="500" /></center>
+<center><img src="/blog/taksim-modes-bidir-spec.svg" alt="Bidirectional typing" width="500" /></center>
 
 Transcribing them to Makam should be simple:
 
@@ -143,8 +145,7 @@ type_check (lambda (fun x => x)) (arrow tunit tunit) ?
 >> Yes.
 ```
 
-As we expect though, this does not model the bidirectional system accurately. For example,
-it is able to discover a type `T` when we are using the type-checking judgment:
+As we expect though, these rules are more general than what the bidirectional system allows. For example, nothing is preventing us from using `type_check` with an unknown type `T`, in which case this encoding will be able to discover a possible type:
 
 ```makam
 type_check (lambda (fun x => x)) T ?
@@ -160,7 +161,7 @@ type_check (lambda (fun x => x)) T ?
 ```
 
 An accurate model of the bidirectional system should fail instead,
-as the type `T` is unknown and can thus not be used with the
+as the type `T` is unknown and can thus should not be used with the
 type-checking judgment.
 
 So instead, let's try to transcribe the system more accurately.
@@ -175,7 +176,7 @@ type_synth : expr -> typ -> prop.
 
 To start, let us focus on just one indicative checking rule:
 
-<center><img src="/blog/taksim-modes-bidir-focused.svg" alt="Abstract syntax tree" width="300" /></center>
+<center><img src="/blog/taksim-modes-bidir-focused.svg" alt="Bidirectional typing: the lambda case" width="300" /></center>
 
 To encode this rule properly, we need to make sure
 that the type `T` of `type_check E T` is treated as an input.
@@ -288,27 +289,10 @@ input arguments, we should use pattern matching rather than
 unification.  Is there some way that we can extend Makam to support
 this recipe?
 
-Note that this will be patently different than the mode support in other logic programming languages (such as Twelf and Mercury). We will not be doing mode *checking*, that is, a static check that a certain predicate behaves according to the specified mode. Instead, we will be *enforcing* a mode, at a per-predicate level, by *making* predicates behave according to their mode. This is similar to the mode support in [ELPI](https://github.com/LPCIC/elpi/), for example.
+Note that this will be patently different than the mode support in other logic programming languages (such as Twelf and Mercury). We will not be doing mode *checking*, that is, a static check that a certain predicate behaves according to the specified mode. Instead, we will be *enforcing* a mode, at a per-predicate level, by *making* predicates behave according to their mode. This is similar to the mode support in [ELPI](https://github.com/LPCIC/elpi/), for example. (In the [next part](/blog/taksim-modes-makam-2/#mode-checking), we will also cover how mode checking can be implemented in Makam.)
 
 ```makam-hidden
-(* stdlib extensions required for this. will open a PR for Makam soon *)
-
-%extend refl.
-
-decompose_term : [Full Head] Full -> Head -> args Head Full -> prop.
-decompose_term Term Head Args :-
-  refl.headargs Term Head ArgsDyn,
-  dyn.to_args ArgsDyn Args.
-
-recompose_term : [Full Head] Head -> args Head Full -> Full -> prop.
-recompose_term Head Args Term when not(refl.isunif Head) :-
-  args.applyfull Head Args Term.
-
-%end.
-```
-
-```makam-hidden
-%extend modes_v1.
+%extend modes_enforcing.
 ```
 
 Here's the basic approach we'll follow: we can do some meta-programming in Makam, transforming predicates that utilize a specific mode according to the recipe. We will have to perform that transformation for all rules of the relevant predicates.
@@ -649,19 +633,16 @@ So it turns out that we might need some additional support in the core
 of Makam for mode declarations to be nice. One idea there is that we
 could add a way to register "rule transformer" predicates that run
 whenever we add a new rule. This would be similar to the staging
-approach, but would have better ergonomics: we could register the mode transformation once, proceed to write all the rules
-in the normal style, and the staged transformation would happen behind
-the scenes. Still, there's a few design questions for this feature:
+approach, but would have better ergonomics: we could register the mode transformation once,
+proceed to write all the rules in the normal style, and the staged transformation would happen behind
+the scenes.
 
-- should we run transformers retroactively for existing rules?
-- how would multiple transformers work out?
-- could we have a nice way in an IDE to switch between the pre-transformation rules and the post-transformation rules?
+Support for rule transformers is now merged in Makam, as of version 0.7.39.
+In the [next part](/blog/taksim-modes-makam-2/), we will see how we can utilize
+this to fix the issues we found with the existing methods presented above.
+We will also see a different approach for mode declarations, that will perform static *mode checking* instead of enforcing a specific mode at runtime.
 
-Still, one good thing that we found is that the mode specification part itself looks quite nice and does not need to be part of the core language. Are these kinds of mode specifications general enough though? In the next part, we will explore a generalization of the mode specifications that can cover more situations, such as higher-order predicates and predicates with mixed argument modes. We will also see if we can use the metaprogramming support of Makam to turn the *bidirectional recipe itself* into a predicate.
-
-## todo
-
-The next part is not done yet! You can watch the [source repository](https://github.com/astampoulis/website-source) of this blog for updates.
+[On to the second part!](/blog/taksim-modes-makam-2)
 
 ```makam-hidden
 %end.
