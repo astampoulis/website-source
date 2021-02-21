@@ -8,12 +8,16 @@ simpleTitle: Hello!
 </span>
 
 I am a software engineering consultant and programming languages researcher living in New York City.
-In my consulting practice I focus on engineering mentorship, language design, and systems design.
+In my consulting practice, I support and mentor teams building software designed for software engineers. My main areas of focus are programming language design, systems design, technical strategy, and engineering process.
+
 I was previously the Director of Engineering at [Originate NYC](http://www.originate.com/), and a researcher at [MIT](http://plv.csail.mit.edu/)
 and at [Yale](http://cpsc.yale.edu/). You can find some of the things that I've worked on below, or
-read new posts to this site as [a blog](/blog). Feel free to [drop me a line]({{< mailto-url >}})!
+read new posts to this site as [a blog](/blog).
 
 I dedicate part of my time to finding ways to help with climate crisis mitigation, by supporting organizations working towards this. I am presently advising the [US Coalition on Sustainability](https://www.uscoalitiononsustainability.org/), which aims to accelerate progress on achieving the UN's Sustainable Development Goals.
+
+Feel free to [drop me a line]({{< mailto-url >}})!
+
 
 ## Research
 
