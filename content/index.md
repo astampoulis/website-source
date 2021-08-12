@@ -7,14 +7,13 @@ simpleTitle: Hello!
 ![Photo](/myphoto.jpg)
 </span>
 
-I am a software engineering consultant and programming languages researcher living in New York City.
-In my consulting practice, I support and mentor teams building software designed for software engineers. My main areas of focus are programming language design, systems design, technical strategy, and engineering process.
+I am a software engineering consultant and programming languages researcher living in New York City. In my consulting practice, I focus in programming language design, systems design, technical strategy, and engineering mentorship.
 
 I was previously the Director of Engineering at [Originate NYC](http://www.originate.com/), and a researcher at [MIT](http://plv.csail.mit.edu/)
 and at [Yale](http://cpsc.yale.edu/). You can find some of the things that I've worked on below, or
 read new posts to this site as [a blog](/blog).
 
-I dedicate part of my time to finding ways to help with climate crisis mitigation, by supporting organizations working towards this. I am presently advising the [US Coalition on Sustainability](https://www.uscoalitiononsustainability.org/), which aims to accelerate progress on achieving the UN's Sustainable Development Goals.
+I dedicate part of my time to finding ways to help with climate crisis mitigation, by supporting organizations working towards this. I am presently advising the [US Coalition on Sustainability](https://www.uscoalitiononsustainability.org/), which aims to accelerate progress on achieving the UN's Sustainable Development Goals; and I am co-creating a course with [Terra.do](https://www.terra.do/) called [Climate Change for Software Engineers](https://www.terra.do/climate-change-for-software-engineers/?utm_medium=social&utm_source=antonis&utm_campaign=network).
 
 Feel free to [drop me a line]({{< mailto-url >}})!
 
